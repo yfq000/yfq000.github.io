@@ -24,8 +24,12 @@
         <ul id="menu">
             <li><a href="./"><b>工程计算</b></a>
         </ul>
+        <ul>
+            <li><a href="#" onclick="save()">保存</a></li>
+        </ul>
     </div>
     <div id="page"></div>
+    <a id="save-link" hidden></a>
     <script>
         document.getElementById("menubar").addEventListener("click", function () {
             let menu_ele = document.getElementById("menu");
@@ -34,7 +38,38 @@
             } else {
                 menu_ele.style.display = "none";
             }
-        })
+        });
+    </script>
+    <script>
+        function downLoadLink(text) {
+            var blob = new Blob([text], { type: "text/plain;charset=utf-8" ,endings:'native'});
+            return URL.createObjectURL(blob);
+        }
+        function save() {
+            let fileContent = new Object();
+            fileContent.url = location.hash.slice(1) || '/';
+            fileContent.inputs = new Array();
+            let currentRow = (document.getElementsByClassName("row"))[0];
+            do {
+                let row = new Array();
+                let inputs = currentRow.getElementsByTagName("input");
+                for (let i = 0; i < inputs.length; i++) {
+                    const val = inputs[i].value;
+                    row.push(val);
+                }
+                let selects = currentRow.getElementsByTagName("select");
+                for (let j = 0; j < selects.length; j++) {
+                    const selectedIndex = selects[j].selectedIndex;
+                    row.push(selectedIndex);
+                }
+                fileContent.inputs.push(row);
+            } while (currentRow = currentRow.nextElementSibling);
+    
+            
+            let link = document.getElementById("save-link");
+            link.href = downLoadLink(JSON.stringify(fileContent));
+            link.click();
+        }
     </script>
 </body>
 </html>

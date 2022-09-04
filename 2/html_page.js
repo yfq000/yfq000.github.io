@@ -94,6 +94,7 @@ function createFormTable(html_page_data) {
     let tbody_ele = document.createElement("tbody");
     let thead_tr_ele = document.createElement("tr");
     let tbody_tr_ele = document.createElement("tr");
+    tbody_tr_ele.classList.add("row");
     thead_ele.appendChild(thead_tr_ele);
     tbody_ele.appendChild(tbody_tr_ele);
     table_ele.appendChild(thead_ele);
@@ -138,6 +139,7 @@ function createFormTable(html_page_data) {
             let td_ele = document.createElement("td");
             th_ele.innerHTML = element.title + "<br>" + element.unit;
             td_ele.id = key;
+            td_ele.classList.add(key);
             thead_tr_ele.appendChild(th_ele);
             tbody_tr_ele.appendChild(td_ele);
         }
@@ -150,6 +152,8 @@ function createFormTable(html_page_data) {
         let button_ele = document.createElement("button");
         button_ele.innerText = "删除";
         button_ele.addEventListener("click", delRow);
+        //button_ele.onclick = ;
+        //button_ele.setAttribute("onclick","delRow()");
         td_ele.appendChild(button_ele);
         tbody_tr_ele.appendChild(td_ele);
     }
@@ -181,10 +185,11 @@ function createFormDiv(html_page_data) {
             let label_ele = document.createElement("label");
             label_ele.innerText = element.title + "\n" + (element.unit || '');
             let input_ele = document.createElement(element.tagname);
-            input_ele.id = key;
-            input_ele.addEventListener("change", function () {
-                html_page_data.inputs[this.id].value = this.value;
-            });
+            //input_ele.id = key;
+            input_ele.name = key;
+            // input_ele.addEventListener("change", function () {
+            //     html_page_data.inputs[this.id].value = this.value;
+            // });
             if (element.tagname == "select") {
                 html_page_data.options[key].forEach(option => {
                     let option_ele =document.createElement("option");
@@ -204,6 +209,13 @@ function createFormDiv(html_page_data) {
         }
     }
 
+    let p_ele = document.createElement("p")
+    let clac_button_ele = document.createElement("button");
+    clac_button_ele.innerText = "计算";
+    clac_button_ele.addEventListener("click", html_page_data.method);
+    p_ele.appendChild(clac_button_ele);
+    form_div_ele.appendChild(p_ele);
+
     for (const key in html_page_data.results) {
         if (Object.hasOwnProperty.call(html_page_data.results, key)) {
             const element = html_page_data.results[key];
@@ -213,6 +225,7 @@ function createFormDiv(html_page_data) {
             //p_ele.hidden = true;
             label_ele.innerText = element.title + "\n" + element.unit;
             span_ele.id = key;
+            span_ele.classList.add(key);
             p_ele.appendChild(label_ele);
             p_ele.appendChild(span_ele);
             form_div_ele.appendChild(p_ele);
@@ -222,25 +235,27 @@ function createFormDiv(html_page_data) {
     return form_div_ele;
 }
 
-function addRow(event) {
-        
+function addRow() {
+    let rows_ele = document.getElementsByClassName("row");
+    let lastRow_ele = rows_ele[rows_ele.length - 1];
+    let newRow_ele = lastRow_ele.cloneNode(true)
+    lastRow_ele.parentElement.appendChild(newRow_ele);
+    newRow_ele.getElementsByTagName("button")[0].addEventListener("click", delRow);
 }
 
-function delRow(event) {
-    
+function delRow() {
+    if (this.parentNode.parentNode.parentNode.childElementCount > 1) {
+        this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode);
+    }
 }
 
-function showResult(result) {
-    for (const key in result) {
-        if (Object.hasOwnProperty.call(result, key)) {
-            const item = result[key];
-            let ele = document.getElementById(key);
-            ele.hidden = false;
-            if (ele.tagname == "input") {
-                ele.value = item.value;
-            } else {
-                ele.innerText = item.value;
-            }   
+function showResult(results) {
+    for (let i = 0; i < results.length; i++) {
+        const item = results[i];
+        for (const key in item) {
+            if (Object.hasOwnProperty.call(item, key)) {
+                (document.getElementsByClassName(key))[i].innerText = item[key];
+            }
         }
     }
 }

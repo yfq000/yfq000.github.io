@@ -1,9 +1,10 @@
+import { Pipe } from "./pipe.js";
 const form_data = {
     pipe_diameter_velocity: {
         title: "流速>管径",
         args: {
-            flowrate_volume: {title: "流量", unit: "m3/h", html: "input", type: "number", default_value: NaN, value: ""},
-            velocity: {title: "流速", unit: "m/s", html: "input", type: "number", default_value: NaN, value: ""}
+            flowrate_volume: {title: "流量", unit: "m3/h", html_tag: "input", type: "number", default_value: '1', value: ''},
+            velocity: {title: "流速", unit: "m/s", html_tag: "input", type: "number", default_value: '', value: ''}
         },
         results: {
             di: {title: "内径", unit: "mm", value: ""}
@@ -14,25 +15,23 @@ const form_data = {
         is_multiple: true,
         has_total_row: false,
         method: function () {
-            if (!verifyargs(html_pages_data.pipe_diameter_velocity.args)) {
+            if (!verifyArgs(this.args.flowrate_volume.value, this.args.velocity.value)) {
                 alert("输入数据错误!");
                 return;
             }
-             
             let pipe = new Pipe();
-            pipe.fluid.flowRate_volume = parseFloat(html_pages_data.pipe_diameter_velocity.args.flowrate_volume.value) / 3600;
-            html_pages_data.pipe_diameter_velocity.results.di.value = (pipe.diameter_velocity(parseFloat(html_pages_data.pipe_diameter_velocity.args.velocity.value)) * 1000).toFixed(2);
-            showResult(html_pages_data.pipe_diameter_velocity.results);  
+            pipe.fluid.flowRate_volume = this.args.flowrate_volume.value / 3600;
+            this.results.di.value = pipe.diameter_velocity(this.args.velocity.value) * 1000;
         }
     },
     pipe_diameter_drop_pressure: {
         title: "压降>管径",
         args: {
-            flowrate_volume: {title: "流量", unit: "m3/h", html: "input", type: "number", default_value: NaN, value: ""},
-            density: {title: "密度", unit: "kg/m3", html: "input", type: "number", default_value: NaN, value: ""},
-            viscosity: {title: "运动粘度", unit: "m2/s", html: "input", type: "number", default_value: NaN, value: ""},
-            length: {title: "管长", unit: "m", html: "input", type: "number", default_value: NaN, value: ""},
-            drop_pressure: {title: "压降", unit: "MPa", html: "input", type: "number", default_value: NaN, value: ""}
+            flowrate_volume: {title: "流量", unit: "m3/h", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            density: {title: "密度", unit: "kg/m3", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            viscosity: {title: "运动粘度", unit: "m2/s", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            length: {title: "管长", unit: "m", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            drop_pressure: {title: "压降", unit: "MPa", html_tag: "input", type: "number", default_value: NaN, value: ""}
         },
         results: {
             di: {title: "内径", unit: "mm", value: ""}
@@ -64,24 +63,24 @@ const form_data = {
     pipe_drop_pressure: {
         title: "阻力",
         args: {
-            pipe: {title: "管道类别", html: "select", value: ""},
-            di: {title: "管道内径", unit: "mm", html: "input", type: "number", default_value: NaN, value: ""},
-            length: {title: "长度", unit: "m", html: "input", type: "number", default_value: NaN, value: ""},                       
-            flowrate_mass: {title: "流量", unit: "kg/h", html: "input", type: "number", default_value: NaN, value: ""},
-            density: {title: "密度", unit: "kg/m3", html: "input", type: "number", default_value: NaN, value: ""},
-            viscosity: {title: "运动粘度", unit: "m2/s", html: "input", type: "number", default_value: NaN, value: ""},
-            elbow45: {title: "45°弯头", unit: "个", html: "input", type: "number", default_value: NaN, value: ""},
-            elbow90: {title: "90°弯头", unit: "个", html: "input", type: "number", default_value: NaN, value: ""},
-            elbow90_x: {title: "90°斜接弯头", unit: "个", html: "input", type: "number", default_value: NaN, value: ""},
-            elbow180: {title: "180°弯头", unit: "个", html: "input", type: "number", default_value: NaN, value: ""},
-            globeValve: {title: "截止阀（全开）", unit: "个", html: "input", type: "number", default_value: NaN, value: ""},
-            angleValve: {title: "角阀（全开）", unit: "个", html: "input", type: "number", default_value: NaN, value: ""},
-            gateValve: {title: "闸阀（全开）", unit: "个", html: "input", type: "number", default_value: NaN, value: ""},
-            plugValve: {title: "旋塞阀（全开）", unit: "个", html: "input", type: "number", default_value: NaN, value: ""},
-            butterflyValve: {title: "蝶阀（全开）", unit: "个", html: "input", type: "number", default_value: NaN, value: ""},
-            checkValve0: {title: "旋启式止回阀", unit: "个", html: "input", type: "number", default_value: NaN, value: ""},
-            checkValve1: {title: "升降式止回阀", unit: "个", html: "input", type: "number", default_value: NaN, value: ""},
-            footValve: {title: "底阀", unit: "个", html: "input", type: "number", default_value: NaN, value: ""},
+            pipe: {title: "管道类别", html_tag: "select", value: ""},
+            di: {title: "管道内径", unit: "mm", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            length: {title: "长度", unit: "m", html_tag: "input", type: "number", default_value: NaN, value: ""},                       
+            flowrate_mass: {title: "流量", unit: "kg/h", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            density: {title: "密度", unit: "kg/m3", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            viscosity: {title: "运动粘度", unit: "m2/s", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            elbow45: {title: "45°弯头", unit: "个", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            elbow90: {title: "90°弯头", unit: "个", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            elbow90_x: {title: "90°斜接弯头", unit: "个", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            elbow180: {title: "180°弯头", unit: "个", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            globeValve: {title: "截止阀（全开）", unit: "个", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            angleValve: {title: "角阀（全开）", unit: "个", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            gateValve: {title: "闸阀（全开）", unit: "个", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            plugValve: {title: "旋塞阀（全开）", unit: "个", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            butterflyValve: {title: "蝶阀（全开）", unit: "个", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            checkValve0: {title: "旋启式止回阀", unit: "个", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            checkValve1: {title: "升降式止回阀", unit: "个", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            footValve: {title: "底阀", unit: "个", html_tag: "input", type: "number", default_value: NaN, value: ""},
         },
         results: {
             velocity: {title: "流速", unit: "m/s", value: ""},
@@ -126,9 +125,9 @@ const form_data = {
     pipe_weight: {
         title: "钢管重量",
         args: {
-            do_: {title: "外径", unit: "mm", html: "input", type: "number", default_value: NaN, value: ""},
-            thk: {title: "壁厚", unit: "mm", html: "input", type: "number", default_value: NaN, value: ""},
-            length: {title: "长度", unit: "m", html: "input", type: "number", default_value: NaN, value: ""}
+            do_: {title: "外径", unit: "mm", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            thk: {title: "壁厚", unit: "mm", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            length: {title: "长度", unit: "m", html_tag: "input", type: "number", default_value: NaN, value: ""}
         },
         results: {
             per_tube_weight: {title: "单位长度钢管自重", unit: "kg/m", value: ""},
@@ -146,13 +145,13 @@ const form_data = {
     insul_pipe_weight: {
         title: "保温管道重量",
         args: {
-            do_: {title: "外径", unit: "mm", html: "input", type: "number", default_value: NaN, value: ""},
-            thk: {title: "壁厚", unit: "mm", html: "input", type: "number", default_value: NaN, value: ""},
-            insul_thk: {title: "保温厚", unit: "mm", html: "input", type: "number", default_value: NaN, value: ""},
-            insul_density: {title: "保温密度", unit: "mm", html: "input", type: "number", default_value: 200},
-            clad_thk: {title: "保护层厚", unit: "mm", html: "input", type: "number", default_value: 0.6},
-            clad_density: {title: "保护层密度", unit: "mm", html: "input", type: "number", default_value: 2720},
-            length: {title: "长度", unit: "m", html: "input", type: "number", default_value: NaN, value: ""}
+            do_: {title: "外径", unit: "mm", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            thk: {title: "壁厚", unit: "mm", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            insul_thk: {title: "保温厚", unit: "mm", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            insul_density: {title: "保温密度", unit: "mm", html_tag: "input", type: "number", default_value: 200},
+            clad_thk: {title: "保护层厚", unit: "mm", html_tag: "input", type: "number", default_value: 0.6},
+            clad_density: {title: "保护层密度", unit: "mm", html_tag: "input", type: "number", default_value: 2720},
+            length: {title: "长度", unit: "m", html_tag: "input", type: "number", default_value: NaN, value: ""}
         },
         results: {
             per_weight: {title: "单重", unit: "kg", value: ""},
@@ -167,8 +166,8 @@ const form_data = {
     anticorrosion_material: {
         title: "防腐材料量",
         args: {
-            do_: {title: "管道外径", unit: "mm", html: "input", type: "number", default_value: NaN, value: ""},
-            length: {title: "长度", unit: "m", html: "input", type: "number", default_value: NaN, value: ""}
+            do_: {title: "管道外径", unit: "mm", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            length: {title: "长度", unit: "m", html_tag: "input", type: "number", default_value: NaN, value: ""}
         },
         results: {
             anticorrosion_area: {title: "刷漆量", unit: "m2", value: ""},
@@ -182,9 +181,9 @@ const form_data = {
     insulation_material: {
         title: "保温材料量",
         args: {
-            do_: {title: "外径", unit: "mm", html: "input", type: "number", default_value: NaN, value: ""},
-            insul_thk: {title: "保温厚", unit: "mm", html: "input", type: "number", default_value: NaN, value: ""},
-            length: {title: "长度", unit: "m", html: "input", type: "number", default_value: NaN, value: ""}
+            do_: {title: "外径", unit: "mm", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            insul_thk: {title: "保温厚", unit: "mm", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            length: {title: "长度", unit: "m", html_tag: "input", type: "number", default_value: NaN, value: ""}
         },
         results: {
             insul_volume: {title: "保温材料量", unit: "m3", value: ""},
@@ -199,14 +198,14 @@ const form_data = {
     property: {
         title: "物性",
         args: {
-            fluid_name: {title: "名称", html: "select", value: ''},
-            temperture: {title: "温度", unit: "℃", html: "input", type: "number", default_value: NaN, value: ""},
-            pressure: {title: "压力", unit: "MPa(a)", html: "input", type: "number", default_value: NaN, value: ""},
-            density: {title: "密度", unit: "kg/m3", html: "input", type: "number", default_value: NaN, value: ""},
-            enthalpy: {title: "焓值", unit: "kj/kg", html: "input", type: "number", default_value: NaN, value: ""},
-            entropy: {title: "比熵", unit: "kj/kg/K", html: "input", type: "number", default_value: NaN, value: ""},
-            internal_energy: {title: "kj/kg", unit: "m", html: "input", type: "number", default_value: NaN, value: ""},
-            vapor_quality: {title: "干度", unit: "m", html: "input", type: "number", default_value: NaN, value: ""}
+            fluid_name: {title: "名称", html_tag: "select", value: ''},
+            temperture: {title: "温度", unit: "℃", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            pressure: {title: "压力", unit: "MPa(a)", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            density: {title: "密度", unit: "kg/m3", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            enthalpy: {title: "焓值", unit: "kj/kg", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            entropy: {title: "比熵", unit: "kj/kg/K", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            internal_energy: {title: "kj/kg", unit: "m", html_tag: "input", type: "number", default_value: NaN, value: ""},
+            vapor_quality: {title: "干度", unit: "m", html_tag: "input", type: "number", default_value: NaN, value: ""}
         },
         results: {
             viscosity: {title: "粘度", unit: "m2/s", value: ""},
@@ -343,4 +342,13 @@ const form_data = {
     }
 }
 
+function verifyArgs(...args) {
+    for (const val of args) { 
+        if (val == '') {
+            console.log(val);
+            return false;
+        }
+    }
+    return true;
+}
 export default form_data;

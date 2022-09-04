@@ -2,20 +2,35 @@
 import { Pipe } from "./pipe.js";
 import { showResult } from "./html_page.js";
 
-function verifyInputs(inputs) {
-    for (const key in inputs) {
-        if (Object.hasOwnProperty.call(inputs, key)) {
-            if (inputs[key].value == "") return false;
+function IsValidInput(input) {
+    for (const key in input) {
+        if (Object.hasOwnProperty.call(input, key)) {
+            if (input[key] == "") return false;
         }
     }
     return true;
+}
+
+function getInputs(inputkeys)
+{
+    let inputs = [];
+    let rows_num = (document.getElementsByName(inputkeys[0])).length;
+    for (let i = 0; i < rows_num; i++) {
+        let row = {};
+        inputkeys.forEach(key => {
+            row[key] = document.getElementsByName(key)[i].value;
+        });
+        inputs.push(row);
+    }
+
+    return inputs;
 }
 
 const html_pages_data = {
     pipe_diameter_velocity: {
         title: "流速>管径",
         inputs: {
-            flowrate_volume: {title: "流量", unit: "m3/h", tagname: "input", type: "number", default_value: NaN, value: ""},
+            flowRate_volume: {title: "流量", unit: "m3/h", tagname: "input", type: "number", default_value: NaN, value: ""},
             velocity: {title: "流速", unit: "m/s", tagname: "input", type: "number", default_value: NaN, value: ""}
         },
         results: {
@@ -27,21 +42,31 @@ const html_pages_data = {
         multiple_rows: true,
         has_total_row: false,
         method: function () {
-            if (!verifyInputs(html_pages_data.pipe_diameter_velocity.inputs)) {
-                alert("输入数据错误!");
-                return;
+            let inputs = getInputs(Object.keys(html_pages_data.pipe_diameter_velocity.inputs)); 
+            console.log(inputs);
+            let results = [];
+            for (const input of inputs) {
+                let result = {}
+                if (IsValidInput(input)) { 
+                    let pipe = new Pipe();
+                    pipe.fluid.flowRate_volume = parseFloat(input.flowRate_volume) / 3600;
+                    result.di = (pipe.diameter_velocity(parseFloat(input.velocity)) * 1000).toFixed(2);
+                    console.log(result.di);
+                }
+                
+                results.push(result);
             }
-             
-            let pipe = new Pipe();
-            pipe.fluid.flowRate_volume = parseFloat(html_pages_data.pipe_diameter_velocity.inputs.flowrate_volume.value) / 3600;
-            html_pages_data.pipe_diameter_velocity.results.di.value = (pipe.diameter_velocity(parseFloat(html_pages_data.pipe_diameter_velocity.inputs.velocity.value)) * 1000).toFixed(2);
-            showResult(html_pages_data.pipe_diameter_velocity.results);  
+            // let pipe = new Pipe();
+            // pipe.fluid.flowRate_volume = parseFloat(html_pages_data.pipe_diameter_velocity.inputs.flowRate_volume.value) / 3600;
+            // html_pages_data.pipe_diameter_velocity.results.di.value = (pipe.diameter_velocity(parseFloat(html_pages_data.pipe_diameter_velocity.inputs.velocity.value)) * 1000).toFixed(2);
+            showResult(results);
+            console.log(results);
         }
     },
     pipe_diameter_drop_pressure: {
         title: "压降>管径",
         inputs: {
-            flowrate_volume: {title: "流量", unit: "m3/h", tagname: "input", type: "number", default_value: NaN, value: ""},
+            flowRate_volume: {title: "流量", unit: "m3/h", tagname: "input", type: "number", default_value: NaN, value: ""},
             density: {title: "密度", unit: "kg/m3", tagname: "input", type: "number", default_value: NaN, value: ""},
             viscosity: {title: "运动粘度", unit: "m2/s", tagname: "input", type: "number", default_value: NaN, value: ""},
             length: {title: "管长", unit: "m", tagname: "input", type: "number", default_value: NaN, value: ""},
@@ -62,7 +87,7 @@ const html_pages_data = {
             }
              
             let pipe = new Pipe();
-            pipe.fluid.flowRate_volume = parseFloat(html_pages_data.pipe_diameter_drop_pressure.inputs.flowrate_volume.value) / 3600;
+            pipe.fluid.flowRate_volume = parseFloat(html_pages_data.pipe_diameter_drop_pressure.inputs.flowRate_volume.value) / 3600;
             pipe.fluid.setDensity(parseFloat(html_pages_data.pipe_diameter_drop_pressure.inputs.density.value));
             pipe.fluid.setViscosity(parseFloat(html_pages_data.pipe_diameter_drop_pressure.inputs.viscosity.value));
             html_pages_data.pipe_diameter_velocity.results.di.value = (
@@ -80,7 +105,7 @@ const html_pages_data = {
             pipe: {title: "管道类别", tagname: "select", value: ""},
             di: {title: "管道内径", unit: "mm", tagname: "input", type: "number", default_value: NaN, value: ""},
             length: {title: "长度", unit: "m", tagname: "input", type: "number", default_value: NaN, value: ""},                       
-            flowrate_mass: {title: "流量", unit: "kg/h", tagname: "input", type: "number", default_value: NaN, value: ""},
+            flowRate_mass: {title: "流量", unit: "kg/h", tagname: "input", type: "number", default_value: NaN, value: ""},
             density: {title: "密度", unit: "kg/m3", tagname: "input", type: "number", default_value: NaN, value: ""},
             viscosity: {title: "运动粘度", unit: "m2/s", tagname: "input", type: "number", default_value: NaN, value: ""},
             elbow45: {title: "45°弯头", unit: "个", tagname: "input", type: "number", default_value: NaN, value: ""},
@@ -116,7 +141,7 @@ const html_pages_data = {
         multiple_rows: true,
         has_total_row: true,
         method: function () {
-            for (const key of ["pipe", "di", "length", "flowrate_mass", "density", "viscosity"]) {
+            for (const key of ["pipe", "di", "length", "flowRate_mass", "density", "viscosity"]) {
                 if (html_pages_data.pipe_drop_pressure.inputs[key].value == "") {
                     alert("输入数据错误!");
                     return;
@@ -124,7 +149,7 @@ const html_pages_data = {
             }
             
             let pipe = new Pipe();
-            pipe.fluid.flowRate_mass = parseFloat(html_pages_data.pipe_diameter_drop_pressure.inputs.flowrate_volume.value) / 3600;
+            pipe.fluid.flowRate_mass = parseFloat(html_pages_data.pipe_diameter_drop_pressure.inputs.flowRate_volume.value) / 3600;
             pipe.fluid.setDensity(parseFloat(html_pages_data.pipe_diameter_drop_pressure.inputs.density.value));
             pipe.fluid.setViscosity(parseFloat(html_pages_data.pipe_diameter_drop_pressure.inputs.viscosity.value));
             html_pages_data.pipe_diameter_velocity.results.di.value = (
