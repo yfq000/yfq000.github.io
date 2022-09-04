@@ -4,19 +4,27 @@ let curl = "property";
 export default {
     data() {
         return {
-            form: {}
+            form: []
         }
     },
     methods: {
-        clac(event) {
-            this.form.method()
+        clac() {
+            console.log(this.form);
+            //this.form.method()
+        },
+        add() {
+            const curForm = window.location.search.slice(1);
+            if (form_data.hasOwnProperty(curForm)) {
+                this.form.push(form_data[curForm]);
+            }
         }
     },
     mounted(){
         const curForm = window.location.search.slice(1);
         if (form_data.hasOwnProperty(curForm)) {
-            this.form = form_data[curForm];
+            this.form.push(form_data[curForm]);
         }
+        console.log(this.form[0].title);
     },
    
     
@@ -29,23 +37,7 @@ export default {
             <a href="?property">pro</a>
             <a href="?pipe_diameter_velocity">pipe_diameter_velocity</a>
         </nav>    
-        <h3>{{form.title}}</h3>
-        <p v-for="(arg, key) in form.args">
-            <label :for="key">{{arg.title}}</label>
-            <input :type="arg.type" :class="key" v-if="arg.html_tag == 'input'" v-model="arg.value" :placeholder="arg.default_value">
-            <select v-if="arg.html_tag == 'select'">
-                <option v-for="option in form.options[key]" :value="option.value">
-                    {{option.text}}
-                </option>
-            </select>
-            <span>{{arg.unit}}</span>
-        </p>
-        <p>结果<button @click="clac">计算</button></p>
-        <p v-for="(item, key) in form.results">
-            <label :for="key">{{item.title}}</label>
-            <span>{{item.value}}</span>
-            <span>{{item.unit}}</span>
-        </p>
+        
     </div>
 </template>
 

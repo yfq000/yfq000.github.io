@@ -42,22 +42,17 @@ const form_data = {
         is_multiple: true,
         has_total_row: false,
         method: function () {
-            if (!verifyargs(html_pages_data.pipe_diameter_drop_pressure.args)) {
+            if (!verifyargs(this.args.flowrate_volume.value, this.args.density.value, this.args.viscosity.value,
+                this.args.length.value, this.args.drop_pressure.value)) {
                 alert("输入数据错误!");
                 return;
             }
              
             let pipe = new Pipe();
-            pipe.fluid.flowRate_volume = parseFloat(html_pages_data.pipe_diameter_drop_pressure.args.flowrate_volume.value) / 3600;
-            pipe.fluid.setDensity(parseFloat(html_pages_data.pipe_diameter_drop_pressure.args.density.value));
-            pipe.fluid.setViscosity(parseFloat(html_pages_data.pipe_diameter_drop_pressure.args.viscosity.value));
-            html_pages_data.pipe_diameter_velocity.results.di.value = (
-                pipe.diameter_pressureDrop(
-                    parseFloat(html_pages_data.pipe_diameter_drop_pressure.args.length.value),
-                    parseFloat(html_pages_data.pipe_diameter_drop_pressure.args.drop_pressure.value) * 1e6
-                ) * 1000
-            ).toFixed(2);
-            showResult(html_pages_data.pipe_diameter_velocity.results);  
+            pipe.fluid.flowRate_volume = this.args.flowrate_volume.value / 3600;
+            pipe.fluid.setDensity(this.args.density.value);
+            pipe.fluid.setViscosity(this.args.viscosity.value);
+            this.results.di.value = pipe.diameter_pressureDrop(this.args.length.value,this.args.drop_pressure.value * 1e6) * 1000;
         }
     },
     pipe_drop_pressure: {
@@ -109,6 +104,8 @@ const form_data = {
                 }
             }
             
+            
+
             let pipe = new Pipe();
             pipe.fluid.flowRate_mass = parseFloat(html_pages_data.pipe_diameter_drop_pressure.args.flowrate_volume.value) / 3600;
             pipe.fluid.setDensity(parseFloat(html_pages_data.pipe_diameter_drop_pressure.args.density.value));
