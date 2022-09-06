@@ -1,5 +1,6 @@
 import { Pipe } from "./pipe.js";
 const form_data = {
+    list: {pipe: "管道", material: "物质"},
     pipe_diameter_velocity: {
         title: "流速>管径",
         args: {
@@ -42,7 +43,7 @@ const form_data = {
         is_multiple: true,
         has_total_row: false,
         method: function () {
-            if (!verifyargs(this.args.flowrate_volume.value, this.args.density.value, this.args.viscosity.value,
+            if (!verifyArgs(this.args.flowrate_volume.value, this.args.density.value, this.args.viscosity.value,
                 this.args.length.value, this.args.drop_pressure.value)) {
                 alert("输入数据错误!");
                 return;
@@ -139,7 +140,7 @@ const form_data = {
         is_multiple: true,
         has_total_row: true
     },
-    insul_pipe_weight: {
+    pipe_insul_weight: {
         title: "保温管道重量",
         args: {
             do_: {title: "外径", unit: "mm", html_tag: "input", type: "number", default_value: NaN, value: ""},
@@ -160,7 +161,7 @@ const form_data = {
         is_multiple: true,
         has_total_row: true
     },
-    anticorrosion_material: {
+    pipe_anticorrosion_material: {
         title: "防腐材料量",
         args: {
             do_: {title: "管道外径", unit: "mm", html_tag: "input", type: "number", default_value: NaN, value: ""},
@@ -175,7 +176,7 @@ const form_data = {
         is_multiple: true,
         has_total_row: true
     },
-    insulation_material: {
+    pipe_insulation_material: {
         title: "保温材料量",
         args: {
             do_: {title: "外径", unit: "mm", html_tag: "input", type: "number", default_value: NaN, value: ""},
@@ -192,7 +193,7 @@ const form_data = {
         is_multiple: true,
         has_total_row: true
     },
-    property: {
+    material_property: {
         title: "物性",
         args: {
             fluid_name: {title: "名称", html_tag: "select", value: ''},
