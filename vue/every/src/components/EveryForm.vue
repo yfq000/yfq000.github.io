@@ -11,8 +11,6 @@ export default {
     },
     methods: {
         clac() {
-            console.log(this.form);
-            //this.form.method()
             this.form.forEach(item => {item.method();});
         },
         add() {
@@ -34,16 +32,13 @@ export default {
 </script>
 
 <template>
-    <div>
-        <nav v-for="(links, key) in list">{{formData.list[key]}}
-            <a v-for="link in links" :href="'?'+link">{{formData[link].title}}</a>
-        </nav>    
-        <h3 v-if="form.length > 0">{{form[0].title}}</h3>
+    <div>   
+        <p v-if="form.length > 0">> {{form[0].title}}</p>
         <div v-for="item in form">
             <p v-for="(arg, key) in item.args">
                 <label :for="key">{{arg.title}}</label>
                 <input :type="arg.type" :name="key" v-model="arg.value" v-if="arg.html_tag=='input'">
-                <select :name="key" v-if="arg.html_tag=='select'">
+                <select :name="key" v-model="arg.value" v-if="arg.html_tag=='select'">
                     <option v-for="option in item.options[key]" :value="option.value">{{option.text}}</option>
                 </select>
                 <span>{{arg.unit}}</span>
@@ -54,7 +49,7 @@ export default {
                 <span>{{result.unit}}</span>
             </p>
         </div>
-        <p>
+        <p v-if="form.length > 0">
             <button @click="clac">计算</button>
         </p>
 
@@ -62,20 +57,19 @@ export default {
 </template>
 
 <style scoped>
-
-h3 {
-    margin-left: 135px;
-}
 p {
     display: flex;
-    margin: 5px 0;
+    padding: 0.2rem 1rem;
 }
 label {
     width: 120px;
     text-align: right;
-    margin-right: 15px;
+    margin: 0 1rem;
 }
 span {
-    margin-left: 15px;
+    margin-left: 1rem;
+}
+button {
+    margin-left: 10rem;
 }
 </style>

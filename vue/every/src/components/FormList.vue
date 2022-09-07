@@ -4,7 +4,8 @@ export default {
     data() {
         return {
             list: {},
-            form_data
+            form_data,
+            l0: {pipe: "管道", material: "物质"}
         }
     },
     mounted() {
@@ -22,20 +23,19 @@ export default {
 
 <template>
     <div v-for="(links, key) in list">
-        <h4>{{form_data.list[key]}}</h4>
+        <p>{{l0[key]}}</p>
         <nav>
             <a v-for="link in links" :href="'?'+link">{{form_data[link].title}}</a>
         </nav>
     </div>
 </template>
 <style scoped>
-h4 {
-    text-align: center;
+p {
+    padding: 0 1rem;
 }
 nav {
     width: 100%;
     font-size: 15px;
-    text-align: center;
     margin-bottom: 2rem;
 }
 

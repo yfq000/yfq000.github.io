@@ -11,8 +11,8 @@ class Fluid {
         this.U = NaN; // Mass specific internal energy J/kg
         this.viscosity = NaN; // Pa.s
         this.Z = NaN; // Compressibility factor
-        this.flowRate_mass = 0; //质量流量
-        this.flowRate_volume = 0; //体积流量
+        this.flowRate_mass = undefined; //质量流量
+        this.flowRate_volume = undefined; //体积流量
         if (key1 != undefined && key2 != undefined && name != undefined) {
             this.name = name;
             this[key1] = val1;
@@ -74,10 +74,10 @@ class Fluid {
         return this.Z;
     }
     getFlowRate_mass() {
-        return isNaN(this.flowRate_mass) ? this.flowRate_volume * this.D : this.flowRate_mass;
+        return this.flowRate_mass == undefined ? this.flowRate_volume * this.D : this.flowRate_mass;
     }
     getFlowRate_volume() {
-        return isNaN(this.flowRate_volume) ? this.flowRate_mass / this.D : this.flowRate_volume;
+        return this.flowRate_volume == undefined ? this.flowRate_mass / this.D : this.flowRate_volume;
     }
 }
 export { Fluid };

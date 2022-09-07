@@ -56,15 +56,6 @@ class Clad {
     }
 }
 class Pipe {
-    // static Roughness = {
-    //     copper_pipe: (0.000005 + 0.00001) / 2,
-    //     non_corrosive_pipe: (0.00005 + 0.0001) / 2,
-    //     mildly_corrosive_pipe: (0.0001 + 0.0002) / 2,
-    //     deep_corrosive_pipe: (0.0002 + 0.0005) / 2,
-    //     reel_pipe: 0.00033,
-    //     cast_iron_pipe: (0.0005 + 0.00085) / 2,
-    //     glass_pipe: (0.0000015 + 0.00001) / 2
-    // };
     constructor() {
         this.do_ = 0;
         this.di = 0;
@@ -107,6 +98,7 @@ class Pipe {
         return cylinderArea(di_clad, do_clad) * this.clad.getDensity();
     }
     velocity() {
+        console.log(this.fluid.getFlowRate_volume());
         return this.fluid.getFlowRate_volume() / circleArea(this.di);
     }
     diameter_velocity(velocity) {
